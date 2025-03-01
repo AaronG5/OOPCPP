@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <exception>
 #include <stdexcept>
 #include <cctype>
@@ -121,14 +122,14 @@ class ChessPiece {
    }
 
    string toString() {
-      if(isAlive) {
-         return to_string(id) + " " + to_string(type) + " " + to_string(isWhite) + " " 
-         + to_string(isAlive) + " " + xPos + " " + to_string(yPos) + "\n";
+      stringstream ss;
+      ss << id << " " << type << " " << isWhite << " " << isAlive;
+      if (isAlive) {
+        ss << " " << xPos << " " << yPos;
       }
-      else {
-         return to_string(id) + " " + to_string(type) + " " + to_string(isWhite) + " " 
-         + to_string(isAlive) + "\n";
-      }
+      ss << "\n";
+
+      return ss.str();
    }
 };
 
