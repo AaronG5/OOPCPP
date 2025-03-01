@@ -18,8 +18,8 @@ enum pieceType {
 };
 
 class ChessPiece {
-   private:
-   static int amountOfObjects;
+   public:
+   static int amount_Of_Objects;
    static int ID;
    int id;
    const enum pieceType type;
@@ -28,14 +28,13 @@ class ChessPiece {
    char xPos;
    int yPos;
 
-   public:
    ChessPiece(enum pieceType type, bool isWhite) 
       : id(ID++), 
       type(type), 
       isWhite(isWhite)
    {  
       setIsAlive(false);
-      ++amountOfObjects;
+      ++amount_Of_Objects;
    }
 
    ChessPiece(enum pieceType type, bool isWhite, char xPos, int yPos) 
@@ -46,11 +45,11 @@ class ChessPiece {
       setIsAlive(true);
       setXPos(xPos);
       setYPos(yPos);
-      ++amountOfObjects;
+      ++amount_Of_Objects;
    }
    
    ~ChessPiece() {
-      --amountOfObjects;
+      --amount_Of_Objects;
    }
    
    private:
@@ -78,8 +77,8 @@ class ChessPiece {
    }
 
    public:
-   static int getAmountOfObjects() {
-      return amountOfObjects;
+   static int getAmount_Of_Objects() {
+      return amount_Of_Objects;
    }
    
    int getId() {
@@ -119,24 +118,13 @@ class ChessPiece {
          throw runtime_error("Error. Can't change coordinates of a dead chess piece.\n");
       }
    }
-
-   string toString() {
-      if(isAlive) {
-         return to_string(id) + " " + to_string(type) + " " + to_string(isWhite) + " " 
-         + to_string(isAlive) + " " + xPos + " " + to_string(yPos) + "\n";
-      }
-      else {
-         return to_string(id) + " " + to_string(type) + " " + to_string(isWhite) + " " 
-         + to_string(isAlive) + "\n";
-      }
-   }
 };
 
-int ChessPiece::amountOfObjects = 0;
+int ChessPiece::amount_Of_Objects = 0;
 int ChessPiece::ID = 0;
 
 void deleteArray(ChessPiece **array) {
-   int size = ChessPiece::getAmountOfObjects();
+   int size = ChessPiece::getAmount_Of_Objects();
    for (int i = 0; i < size; ++i) {
       delete array[i];
    }
@@ -155,7 +143,7 @@ int main() {
       assert(chessPieceArray[0]->getIsWhite());
       assert(chessPieceArray[0]->getXPos() == 'a');
       assert(chessPieceArray[0]->getYPos() == 1);
-      assert(ChessPiece::getAmountOfObjects() == 1);
+      assert(ChessPiece::getAmount_Of_Objects() == 1);
 
       chessPieceArray[1] = new ChessPiece(ROOK, false, 'H', 8);
       assert(chessPieceArray[1]->getId() == 1);
@@ -164,7 +152,7 @@ int main() {
       assert(!chessPieceArray[1]->getIsWhite());
       assert(chessPieceArray[1]->getXPos() == 'h');
       assert(chessPieceArray[1]->getYPos() == 8);
-      assert(ChessPiece::getAmountOfObjects() == 2);
+      assert(ChessPiece::getAmount_Of_Objects() == 2);
 
       chessPieceArray[0]->move('a', 6);
       assert(chessPieceArray[0]->getId() == 0);
@@ -173,7 +161,7 @@ int main() {
       assert(chessPieceArray[0]->getIsWhite());
       assert(chessPieceArray[0]->getXPos() == 'a');
       assert(chessPieceArray[0]->getYPos() == 6); // Only this changes
-      assert(ChessPiece::getAmountOfObjects() == 2);
+      assert(ChessPiece::getAmount_Of_Objects() == 2);
 
       chessPieceArray[0]->kill();
       assert(chessPieceArray[0]->getId() == 0);
@@ -182,7 +170,7 @@ int main() {
       assert(chessPieceArray[0]->getIsWhite());
       assert(chessPieceArray[0]->getXPos() == 'a');
       assert(chessPieceArray[0]->getYPos() == 6);
-      assert(ChessPiece::getAmountOfObjects() == 2);
+      assert(ChessPiece::getAmount_Of_Objects() == 2);
 
       chessPieceArray[2] = new ChessPiece(KING, true, 'd', 3);
       assert(chessPieceArray[2]->getId() == 2);
@@ -191,17 +179,14 @@ int main() {
       assert(chessPieceArray[2]->getIsWhite());
       assert(chessPieceArray[2]->getXPos() == 'd');
       assert(chessPieceArray[2]->getYPos() == 3);
-      assert(ChessPiece::getAmountOfObjects() == 3);
+      assert(ChessPiece::getAmount_Of_Objects() == 3);
 
       chessPieceArray[3] = new ChessPiece(KNIGHT, true);
       assert(chessPieceArray[3]->getId() == 3);
       assert(chessPieceArray[3]->getType() == KNIGHT);
       assert(!(chessPieceArray[3]->getIsAlive()));
       assert(chessPieceArray[3]->getIsWhite());
-      assert(ChessPiece::getAmountOfObjects() == 4);
-      
-      cout << chessPieceArray[2]->toString();
-      cout << chessPieceArray[3]->toString();
+      assert(ChessPiece::getAmount_Of_Objects() == 4);
 
       chessPieceArray[4] = new ChessPiece(QUEEN, true, 'k', 87);
       cout << "Foobar\n"; // Shouldn't be reachable
@@ -217,7 +202,7 @@ int main() {
       deleteArray(chessPieceArray);
    }
 
-   assert(ChessPiece::getAmountOfObjects() == 0);
+   assert(ChessPiece::getAmount_Of_Objects() == 0);
 
    return 0;
 }
