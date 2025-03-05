@@ -2,7 +2,7 @@
 #include <exception>
 #include <stdexcept>
 #include <cctype>
-#include <assert.h>
+#include <cassert>
 
 #define ARRAY_SIZE 5
 
