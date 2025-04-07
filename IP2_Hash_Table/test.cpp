@@ -1,6 +1,6 @@
-#include "header.h"
 #include <cassert>
 #include <iostream>
+#include "realizacija.h"
 
 #define CAPACITY 10
 
@@ -139,12 +139,9 @@ void rehashTest() {
    cout << "\nRehash unit test output:\n";
    HashTable *test = new HashTable(CAPACITY);
    insertBestCase(test);
-   cout << test->toString() << "\n";
    insertWorstCase(test);
    cout << test->toString() << "\n";
    test->rehash(17);
-   cout << test->toString() << "\n";
-   test->rehash(3);
    cout << test->toString() << "\n";
    
    cout << "Rehash unit tests passed.\n";
@@ -200,17 +197,13 @@ void removeTest() {
 }
 
 void clearTest() {
-   cout << "\nClear unit test output:\n";
-
    HashTable *test = new HashTable(CAPACITY);
 
    insertBestCase(test);
    HashTable testCopy(*test);
    assert(*test == testCopy);
-   cout << test->toString() << "\n";
    !(*test);
    assert(!(*test == testCopy));
-   cout << test->toString() << "\n";
 
    cout << "Clear unit tests passed.\n";
 }
@@ -256,7 +249,7 @@ void invalidCapacityTest() {
 
 int main() {
 
-   cout << "Running class HashTable unit tests...\n";
+   cout << "Running class HashTable unit tests...\n\n";
    
    try {
       findTest();
@@ -274,6 +267,6 @@ int main() {
 
    exceptionTest();
 
-   printf("Unit tests passed!\n");
+   printf("\nUnit tests passed!\n");
    return 0;
 }
