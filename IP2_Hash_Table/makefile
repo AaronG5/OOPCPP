@@ -1,24 +1,40 @@
+CC = g++
+CFLAGS = -std=c++17 -Wall -Wextra -c -Wno-self-assign-overloaded -Wno-unused-variable
+
+TEST = Test
+DEMO = Demo
+
+TEST_LOG = log.txt
+
+demo.o: demo.cpp realizacija.h
+	$(CC) $(CFLAGS) demo.cpp -o demo.o
+
+realizacija.o: realizacija.cpp realizacija.h
+	$(CC) $(CFLAGS) realizacija.cpp -o realizacija.o
+
+test.o: test.cpp realizacija.h
+	$(CC) $(CFLAGS) test.cpp -o test.o
+
 demo: demo.o realizacija.o
-	g++ realizacija.o demo.o -o demo
+	$(CC) realizacija.o demo.o -o $(DEMO)
 
 test: test.o realizacija.o
-	g++ realizacija.o test.o -o test
+	$(CC) realizacija.o test.o -o $(TEST)
 
-demo.o: demo.cpp header.h
-	g++ -c demo.cpp -o demo.o
-
-stack.o: realizacija.cpp header.h
-	g++ -c realizacija.cpp -o realizacija.o
-
-test.o: test.cpp header.h
-	g++ -c test.cpp -o test.o
 
 run_demo: demo
-	./demo
+	./$(DEMO)
 
 run_test: test
-	./test
+	./$(TEST) > $(TEST_LOG)	2>&1
+
+all:
+	$(MAKE) demo
+	$(MAKE) test
 
 clean:
-	rm *.o program *.txt
-	clear
+	rm *.o $(TEST) $(DEMO)
+
+rebuild:
+	$(MAKE) clean
+	$(MAKE) all
