@@ -5,7 +5,7 @@ aaron.gandzumian@mif.stud.vu.lt
 
 This header file defines the implementation of a hash table using separate chaining.
 
-The hash table stores key-value pairs and uses a vector of linked lists (std::vector of std::list of std::pair) to handle collisions.
+The hash table stores key-value pairs, assuming every key is unique, and uses a vector of linked lists (std::vector of std::list of std::pair) to handle collisions.
    Key = string; Value = int; Can be adapted for any kind of data.
 
 Collision resolution: When two key-value pairs are trying to access the same index value, they are instead stored in the same list (separate chaining).
@@ -29,9 +29,10 @@ Class provides basic exception handling through `KeyNotFoundException` class. Ex
 The implementation uses the PImpl (Pointer to Implementation) idiom for better separation of interface and implementation and maintaining
 principles of encapsulation.
 
-Deep copying of created hash tables is possible thanks to deep copy constructor.
+Deep copying of created hash tables is possible using deep copy constructor or overriden `operator=`.
 
-
+`toString` method outputs content of all buckets (empty or full) if the capacity of the table doesn't exceed 10, otherwise only the buckets with 
+values stored inside are outputed.
 
 */
 
@@ -45,7 +46,7 @@ namespace myHash {
    
    class KeyNotFoundException : public std::exception {
    public:
-      const char *what() const noexcept override {
+      const char* what() const noexcept override {
          return "Error: Couldn't find key";
       }
    };
@@ -72,6 +73,7 @@ namespace myHash {
    int operator[] (const std::string& key) const; // Search table by key, return value
    void operator() (const std::string& key, const int& value); // Insert key-value pair
    bool operator== (const HashTable& other) const; // Is the same table in terms of content
+   bool operator!= (const HashTable& other) const;
    bool operator> (const HashTable& other) const; // Is greater than other table based on number of elements
    
    std::string toString() const;

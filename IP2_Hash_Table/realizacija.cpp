@@ -21,7 +21,7 @@ public:
       this->capacity = other.capacity;
       this->size = other.size;
    }
-   ~Impl();
+   ~Impl() = default;
    
    int getSize() const {
       return size;
@@ -52,9 +52,13 @@ public:
       if(size + 1 >= capacity) {
          rehash(capacity * 2);
       }
-      int index = hashFunction(key);
-      table[index].push_back(std::make_pair(key, value));
-      ++size; // TODO: make if statement to resize table if reaches limit
+      try {
+         find(key);
+      } catch (const KeyNotFoundException& e) {
+         int index = hashFunction(key);
+         table[index].push_back(std::make_pair(key, value));
+         ++size;
+      }
    }
 
    int find(const std::string& key) const {
@@ -97,9 +101,11 @@ public:
    }
 
    Impl& operator= (const Impl& other) { // deep copy
-      this->table = other.table;
-      this->capacity = other.capacity;
-      this->size = other.size;
+      if (*this != other) {
+         this->table = other.table;
+         this->capacity = other.capacity;
+         this->size = other.size;
+      }
       return *this;
    }
 
@@ -125,6 +131,10 @@ public:
              this->table == other.table;
    }
 
+   bool operator!= (const Impl& other) const {
+      return !(*this == other);
+   }
+
    bool operator> (const Impl& other) const {
       return this->size > other.size;
    }
@@ -133,12 +143,23 @@ public:
       std::string tableInfo = "\0";
       int index = 0;
       for(std::list<std::pair<std::string, int>> eachBucket : table) {
-         tableInfo += std::to_string(index) + ".";
-         ++index;
-         for(std::list<std::pair<std::string, int>>::iterator it = eachBucket.begin(); it != eachBucket.end(); ++it) {
-            tableInfo += "  " + it->first + " " + std::to_string(it->second);
+         if(capacity > 10) {
+            if(!(eachBucket.empty())) {
+               tableInfo += std::to_string(index) + ".";
+               for(std::list<std::pair<std::string, int>>::iterator it = eachBucket.begin(); it != eachBucket.end(); ++it) {
+                  tableInfo += "  " + it->first + " " + std::to_string(it->second);
+               }
+               tableInfo += "\n";
+            }
          }
-         tableInfo += "\n";
+         else {
+            tableInfo += std::to_string(index) + ".";
+            for(std::list<std::pair<std::string, int>>::iterator it = eachBucket.begin(); it != eachBucket.end(); ++it) {
+               tableInfo += "  " + it->first + " " + std::to_string(it->second);
+            }
+            tableInfo += "\n";
+         }
+         ++index;
       }
       return tableInfo;
    }
@@ -147,7 +168,7 @@ public:
 HashTable::HashTable(const int& amountOfBuckets) : pImpl(std::make_unique<Impl>(amountOfBuckets)) { }
 HashTable::HashTable(const HashTable& other) : pImpl(std::make_unique<Impl>(*other.pImpl)) { }
 HashTable::~HashTable() = default;
-HashTable& HashTable::operator= (const HashTable& other) { pImpl = std::make_unique<Impl>(*other.pImpl); return *this;  }
+HashTable& HashTable::operator= (const HashTable& other) { if (this != &other) pImpl = std::make_unique<Impl>(*other.pImpl); return *this;  }
 
 int HashTable::getSize() const { return pImpl->getSize(); }
 int HashTable::getCapacity() const { return pImpl->getCapacity(); }
@@ -160,6 +181,7 @@ void HashTable::operator! () { pImpl->operator!(); }
 int HashTable::operator[] (const std::string& key) const { return pImpl->operator[] (key); }
 void HashTable::operator() (const std::string& key, const int& value) { pImpl->operator() (key, value);}
 bool HashTable::operator== (const HashTable& other) const { return *pImpl == *other.pImpl; }
+bool HashTable::operator!= (const HashTable& other) const { return *pImpl != *other.pImpl; }
 bool HashTable::operator> (const HashTable& other) const { return *pImpl > *other.pImpl; }
 
 std::string HashTable::toString() const { return pImpl->toString(); }
