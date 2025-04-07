@@ -1,7 +1,7 @@
 #include <vector>
 #include <list>
 #include <cassert>
-#include "header.h"
+#include "realizacija.h"
 
 namespace myHash {
 
@@ -85,12 +85,9 @@ public:
    void rehash(const int& newCapacity) {
       if(newCapacity <= 0) throw std::invalid_argument("Error: Capacity must be greater than 0");
       setCapacity(newCapacity);
-      size = 0;
       std::vector <std::list <std::pair <std::string, int> > > oldTable(table);
 
-      for(auto &eachBucket : table) {
-         eachBucket.clear();
-      }
+      !(*this);
       table.resize(newCapacity);
 
       for(auto &eachBucket : oldTable) {
@@ -110,11 +107,10 @@ public:
    }
 
    void operator! () {
-      for(std::list<std::pair<std::string, int>> eachBucket : table) {
-         for(std::list<std::pair<std::string, int>>::iterator it = eachBucket.begin(); it != eachBucket.end(); ++it) {
-            remove(it->first);
-         }
+      for(auto &eachBucket : table) {
+         eachBucket.clear();
       }
+      size = 0;
    }
 
    int operator[] (const std::string& key) {
