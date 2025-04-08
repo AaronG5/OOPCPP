@@ -311,6 +311,7 @@ int main() {
       removeTest();
       clearTest();
       exceptionTest();
+      invalidCapacityTest();
    } catch (...) {
       cout << "Unknown error occurred\n";
       isPassed = false;
