@@ -1,7 +1,8 @@
 // Demonstration of HashTable class usage in a real world scenario
 
-#include <vector>
 #include <iostream>
+#include <string>
+#include <utility>
 #include "realizacija.h"
 
 using namespace myHash;
@@ -16,8 +17,8 @@ int main() {
       cout << "Inserting students: Mary(ID:50123), Leo(ID:60184), Jack(ID:27924), Bill(ID:79215)...\n";
       db->insert("Mary", 50123);
       db->insert("Leo", 60184);
-      (*db)("Jack", 27924);
-      (*db)("Bill", 79215);
+      (*db) += pair("Jack", 27924);
+      (*db) += pair("Bill", 79215);
    
       cout << "\nCapacity of possible student entries in database: " << db->getCapacity() << "\nAmount of students entered into database: " << db->getSize() << "\n";
 
@@ -40,7 +41,7 @@ int main() {
       !(*dbCopy);
 
       cout << "\nThe administration would like to check whether it was able to successfully clear the copied database.\n";
-      cout << "The clearing of copied database was: " << ((*dbCopy == *db && dbCopy->getSize() == 0) ? "unsuccessful.\n" : "successful.\n");
+      cout << "The clearing of copied database was: " << ((dbCopy->equals(*db) && dbCopy->getSize() == 0) ? "unsuccessful.\n" : "successful.\n");
 
       cout << "\nLeo's student ID is 60184: " << (((*db)["Leo"] == 60184) ? "True\n" : "False\n"); 
 

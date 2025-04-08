@@ -1,9 +1,19 @@
 #include <vector>
 #include <list>
-#include <cassert>
+#include <string>
+#include <memory>
+#include <stdexcept>
+#include <algorithm>
 #include "realizacija.h"
 
 namespace myHash {
+
+class KeyNotFoundException : public std::exception {
+public:
+   const char* what() const noexcept override {
+      return "Error: Couldn't find key";
+   }
+};
 
 class HashTable::Impl {
 private:
@@ -11,27 +21,6 @@ private:
    int capacity;
    int size = 0;
    
-public: 
-   Impl(const int& amountOfBuckets) {
-      setCapacity(amountOfBuckets);
-      table.resize(capacity);
-   }
-   Impl(const Impl& other) {
-      this->table = other.table;
-      this->capacity = other.capacity;
-      this->size = other.size;
-   }
-   ~Impl() = default;
-   
-   int getSize() const {
-      return size;
-   }
-
-   int getCapacity() const {
-      return capacity;
-   }
-
-private:
    void setCapacity(const int& capacity) {
       if(capacity > 0) {
          this->capacity = capacity;
@@ -44,141 +33,162 @@ private:
       for(char c : key) {
          sumOfChars += c;
       }
-      return sumOfChars % this->capacity;
+      return sumOfChars % capacity;
    }
 
-public:
-   void insert(const std::string& key, const int& value) {
-      if(size + 1 >= capacity) {
-         rehash(capacity * 2);
+   friend HashTable;
+};
+
+HashTable::HashTable(const int& amountOfBuckets) : pImpl(std::make_unique<Impl>()) {
+   pImpl->setCapacity(amountOfBuckets);
+   pImpl->table.resize(amountOfBuckets);
+}
+
+HashTable::HashTable(const HashTable& other) : pImpl(std::make_unique<Impl>()) { 
+   pImpl->capacity = other.pImpl->capacity;
+   pImpl->size = other.pImpl->size;
+
+   pImpl->table.resize(other.pImpl->capacity);
+   for (int i = 0; i < other.pImpl->capacity; ++i) {
+      pImpl->table[i] = other.pImpl->table[i];
+   }
+}
+
+HashTable::~HashTable() = default;
+
+HashTable& HashTable::operator= (const HashTable& other) { 
+   if (this != &other) pImpl = std::make_unique<Impl>(*other.pImpl); 
+   return *this;  
+}
+
+int HashTable::getSize() const { 
+   return pImpl->size; 
+}
+
+int HashTable::getCapacity() const { 
+   return pImpl->capacity; 
+}
+
+void HashTable::insert(const std::string& key, const int& value) { 
+   if(pImpl->size + 1 >= pImpl->capacity) {
+      rehash(pImpl->capacity * 2);
+   }
+   try {
+      find(key);
+   } catch (const KeyNotFoundException& e) {
+      int index = pImpl->hashFunction(key);
+      pImpl->table[index].push_back(std::make_pair(key, value));
+      ++(pImpl->size);
+   }
+}
+
+int HashTable::find(const std::string& key) const { 
+   int index = pImpl->hashFunction(key);
+   auto it = std::find_if(pImpl->table[index].begin(), pImpl->table[index].end(), 
+      [&](const std::pair<std::string, int>& par) { return par.first == key; });
+   if(it != pImpl->table[index].end()) {
+      return it->second;
+   }
+   else throw KeyNotFoundException();
+}
+
+void HashTable::remove(const std::string& key) { 
+   int index = pImpl->hashFunction(key);
+   auto it = std::find_if(pImpl->table[index].begin(), pImpl->table[index].end(), 
+      [&](const std::pair<std::string, int>& par) { return par.first == key; });
+   if(it != pImpl->table[index].end()) {
+      pImpl->table[index].erase(it);
+      --(pImpl->size);
+   }
+   else throw KeyNotFoundException();
+}
+
+void HashTable::rehash(const int& newCapacity) { 
+   if(newCapacity <= 0) throw std::invalid_argument("Error: Capacity must be greater than 0");
+   pImpl->setCapacity(newCapacity);
+   std::vector <std::list <std::pair <std::string, int> > > oldTable(pImpl->table);
+
+   !(*this);
+   pImpl->table.resize(newCapacity);
+
+   for(auto &eachBucket : oldTable) {
+      for(const auto& pair : eachBucket) {
+         insert(pair.first, pair.second);
       }
-      try {
-         find(key);
-      } catch (const KeyNotFoundException& e) {
-         int index = hashFunction(key);
-         table[index].push_back(std::make_pair(key, value));
-         ++size;
-      }
    }
+}
 
-   int find(const std::string& key) const {
-      int index = hashFunction(key);
-      auto it = std::find_if(table[index].begin(), table[index].end(), 
-         [&](const std::pair<std::string, int>& par) { return par.first == key; });
-      if(it != table[index].end()) {
-         return it->second;
-      }
-      else throw KeyNotFoundException();
+bool HashTable::equals(const HashTable& other) const {  // Don't know if correct
+   return pImpl->capacity == other.pImpl->capacity &&
+      pImpl->size == other.pImpl->size &&
+      pImpl->table == other.pImpl->table;
+}
+
+void HashTable::operator! () { 
+   for(auto &eachBucket : pImpl->table) {
+      eachBucket.clear();
    }
+   pImpl->size = 0;
+}
 
-   void remove(const std::string& key) {
-      int index = hashFunction(key);
-      auto it = std::find_if(table[index].begin(), table[index].end(), 
-         [&](const std::pair<std::string, int>& par) { return par.first == key; });
-      if(it != table[index].end()) {
-         table[index].erase(it);
-         --size;
-      }
-      else throw KeyNotFoundException();
-   }
+int HashTable::operator[] (const std::string& key) const { 
+   return find(key); 
+}
 
-   void rehash(const int& newCapacity) {
-      if(newCapacity <= 0) throw std::invalid_argument("Error: Capacity must be greater than 0");
-      setCapacity(newCapacity);
-      std::vector <std::list <std::pair <std::string, int> > > oldTable(table);
+void HashTable::operator+= (const std::pair<std::string, int>& p) { 
+   insert(p.first, p.second); 
+}
 
-      !(*this);
-      table.resize(newCapacity);
+void HashTable::operator-= (const std::string& key) { 
+   remove(key); 
+}
 
-      for(auto &eachBucket : oldTable) {
-         for(const auto& pair : eachBucket) {
-            insert(pair.first, pair.second);
-         }
-      }
-   }
+bool HashTable::operator== (const HashTable& other) const { 
+   return pImpl->size == other.pImpl->size; 
+}
 
-   Impl& operator= (const Impl& other) { // deep copy
-      if (*this != other) {
-         this->table = other.table;
-         this->capacity = other.capacity;
-         this->size = other.size;
-      }
-      return *this;
-   }
+bool HashTable::operator!= (const HashTable& other) const { 
+   return pImpl->size != other.pImpl->size; 
+}
 
-   void operator! () {
-      for(auto &eachBucket : table) {
-         eachBucket.clear();
-      }
-      size = 0;
-   }
+bool HashTable::operator> (const HashTable& other) const { 
+   return  pImpl->size > other.pImpl->size; 
+}
 
-   int operator[] (const std::string& key) {
-      return find(key);
-   }
+bool HashTable::operator>= (const HashTable& other) const {
+   return pImpl->size >= other.pImpl->size; 
+}
 
-   void operator() (const std::string& key, const int& value) {
-      insert(key, value);
-   }
+bool HashTable::operator< (const HashTable& other) const {
+   return pImpl->size < other.pImpl->size; 
+}
 
-   bool operator== (const Impl& other) const {
-      return this->capacity == other.capacity &&
-             this->size == other.size &&
-             this->table == other.table;
-   }
+bool HashTable::operator<= (const HashTable& other) const {
+   return pImpl->size <= other.pImpl->size; 
+}
 
-   bool operator!= (const Impl& other) const {
-      return !(*this == other);
-   }
-
-   bool operator> (const Impl& other) const {
-      return this->size > other.size;
-   }
-
-   std::string toString() const {
-      std::string tableInfo = "\0";
-      int index = 0;
-      for(std::list<std::pair<std::string, int>> eachBucket : table) {
-         if(capacity > 10) {
-            if(!(eachBucket.empty())) {
-               tableInfo += std::to_string(index) + ".";
-               for(std::list<std::pair<std::string, int>>::iterator it = eachBucket.begin(); it != eachBucket.end(); ++it) {
-                  tableInfo += "  " + it->first + " " + std::to_string(it->second);
-               }
-               tableInfo += "\n";
-            }
-         }
-         else {
+std::string HashTable::toString() const {
+   std::string tableInfo = "\0";
+   int index = 0;
+   for(std::list<std::pair<std::string, int>> eachBucket : pImpl->table) {
+      if(pImpl->capacity > 10) {
+         if(!(eachBucket.empty())) {
             tableInfo += std::to_string(index) + ".";
             for(std::list<std::pair<std::string, int>>::iterator it = eachBucket.begin(); it != eachBucket.end(); ++it) {
                tableInfo += "  " + it->first + " " + std::to_string(it->second);
             }
             tableInfo += "\n";
          }
-         ++index;
       }
-      return tableInfo;
+      else {
+         tableInfo += std::to_string(index) + ".";
+         for(std::list<std::pair<std::string, int>>::iterator it = eachBucket.begin(); it != eachBucket.end(); ++it) {
+            tableInfo += "  " + it->first + " " + std::to_string(it->second);
+         }
+         tableInfo += "\n";
+      }
+      ++index;
    }
-};
-
-HashTable::HashTable(const int& amountOfBuckets) : pImpl(std::make_unique<Impl>(amountOfBuckets)) { }
-HashTable::HashTable(const HashTable& other) : pImpl(std::make_unique<Impl>(*other.pImpl)) { }
-HashTable::~HashTable() = default;
-HashTable& HashTable::operator= (const HashTable& other) { if (this != &other) pImpl = std::make_unique<Impl>(*other.pImpl); return *this;  }
-
-int HashTable::getSize() const { return pImpl->getSize(); }
-int HashTable::getCapacity() const { return pImpl->getCapacity(); }
-void HashTable::insert(const std::string& key, const int& value) { pImpl->insert(key, value); }
-void HashTable::remove(const std::string& key) { pImpl->remove(key); }
-int HashTable::find(const std::string& key) const { return pImpl->find(key); }
-void HashTable::rehash(const int& newCapacity) { pImpl->rehash(newCapacity); }
-
-void HashTable::operator! () { pImpl->operator!(); }
-int HashTable::operator[] (const std::string& key) const { return pImpl->operator[] (key); }
-void HashTable::operator() (const std::string& key, const int& value) { pImpl->operator() (key, value);}
-bool HashTable::operator== (const HashTable& other) const { return *pImpl == *other.pImpl; }
-bool HashTable::operator!= (const HashTable& other) const { return *pImpl != *other.pImpl; }
-bool HashTable::operator> (const HashTable& other) const { return *pImpl > *other.pImpl; }
-
-std::string HashTable::toString() const { return pImpl->toString(); }
+   return tableInfo;
+}
 }

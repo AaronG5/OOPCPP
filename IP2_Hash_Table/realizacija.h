@@ -12,17 +12,22 @@ Collision resolution: When two key-value pairs are trying to access the same ind
 Hash table resizing and rehashing: hash table automatically increases capacity by a factor of 2 once size == capacity
 
 Primary hash table functions (all lookups, deletions, etc. are done using key):
-- Insert key-value pair
-- Remove key-value pair
-- Find value by key
-- Resize table and rehash key-value pairs
+- Insert key-value pair                   [ insert(string, int) ]
+- Remove key-value pair                   [ remove(string) ]
+- Find value by key                       [ find(string) ]
+- Resize table and rehash key-value pairs [ rehash(int) ]
+- Check whether two tables are the same   [ equals(HashTable) ]
 
 - Operator overloads:
    - `!` clear table of all key-value pairs and free allocated memory of data
-   - `()` insert key-value pair
+   - `+=` insert key-value pair
+   - `-=` remove key-value pair by key
    - `[]` find value by key
-   - `==` compare whether two tables have the same content
+   - `==` compare whether two tables are equal based on number of elements
    - `>` compare whether one table is bigger than the other based on the number of elements
+   - `>=` compare whether one table is bigger than or equal to the other based on the number of elements
+   - `<` compare whether one table is less than the other based on the number of elements
+   - `<=` compare whether one table is less than or equal to the other based on the number of elements
 
 Class provides basic exception handling through `KeyNotFoundException` class. Exception is thrown whenever key is not found during lookup or removal.
 
@@ -33,23 +38,16 @@ Deep copying of created hash tables is possible using deep copy constructor or o
 
 `toString` method outputs content of all buckets (empty or full) if the capacity of the table doesn't exceed 10, otherwise only the buckets with 
 values stored inside are outputed.
-
 */
 
 #ifndef HEADER_H
 #define HEADER_H
 
 #include <string>
-#include <cstddef>
+#include <utility>
+#include <memory>
 
 namespace myHash {
-   
-   class KeyNotFoundException : public std::exception {
-   public:
-      const char* what() const noexcept override {
-         return "Error: Couldn't find key";
-      }
-   };
 
    class HashTable {
    private:
@@ -63,18 +61,23 @@ namespace myHash {
    ~HashTable();
    
    int getSize() const; // Return number of objects in hash table
-   int getCapacity() const;
+   int getCapacity() const; // Return amount of buckets in hash table
    void insert(const std::string& key, const int& value); // Insert key-value pair by key
-   void remove(const std::string& key); // Remove key-value pair by key
    int find(const std::string& key) const; // Find value by key
-   void rehash(const int& newCapacity);
+   void remove(const std::string& key); // Remove key-value pair by key
+   void rehash(const int& newCapacity); // Resize and rehash all key-value pairs
+   bool equals(const HashTable& other) const; // Is hash table the same as other hash table
    
    void operator!(); // Clear whole table
    int operator[] (const std::string& key) const; // Search table by key, return value
-   void operator() (const std::string& key, const int& value); // Insert key-value pair
-   bool operator== (const HashTable& other) const; // Is the same table in terms of content
-   bool operator!= (const HashTable& other) const;
+   void operator+= (const std::pair<std::string, int>& p); // Insert key-value pair
+   void operator-= (const std::string& key); // Remove key-value pair
+   bool operator== (const HashTable& other) const; // Is equal to other table based on number of elements
+   bool operator!= (const HashTable& other) const; // Is not equal to other table based on number of elements
    bool operator> (const HashTable& other) const; // Is greater than other table based on number of elements
+   bool operator>= (const HashTable& other) const; // Is greater than or equal to other table based on number of elements
+   bool operator< (const HashTable& other) const; // Is less than other table based on number of elements
+   bool operator<= (const HashTable& other) const; // Is less than or equal to other table based on number of elements
    
    std::string toString() const;
    };
