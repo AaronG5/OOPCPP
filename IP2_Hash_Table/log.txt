@@ -5,25 +5,25 @@ Copy unit tests PASSED.
 Size unit tests PASSED.
 
 Rehash unit test output:
-2.  Anna 66
-3.  Ron 55
-4.  Tom 44
-5.  Fin 88
-8.  Jim 44  Leo 55  Eve 66  Sal 77
-9.  Jin 33
-11.  Adam 22
-16.  Glorp 77
-18.  Tim 11  Sin 22  Rio 33  Adil 88
+2. Anna 66
+3. Ron 55
+4. Tom 44
+5. Fin 88
+8. Jim 44 Leo 55 Eve 66 Sal 77
+9. Jin 33
+11. Adam 22
+16. Glorp 77
+18. Tim 11 Sin 22 Rio 33 Adil 88
 
-0.  Jin 33
-4.  Adil 88
-6.  Glorp 77
-8.  Anna 66
-9.  Tim 11  Sin 22  Rio 33
-13.  Fin 88
-14.  Ron 55  Adam 22
-15.  Tom 44
-16.  Jim 44  Leo 55  Eve 66  Sal 77
+0. Jin 33
+4. Adil 88
+6. Glorp 77
+8. Anna 66
+9. Tim 11 Sin 22 Rio 33
+13. Fin 88
+14. Ron 55 Adam 22
+15. Tom 44
+16. Jim 44 Leo 55 Eve 66 Sal 77
 Rehash unit tests PASSED.
 Compare unit tests PASSED.
 Remove unit tests PASSED.
@@ -32,5 +32,8 @@ Testing custom exception...
 Caught: Error: Couldn't find key
 Caught: Error: Couldn't find key
 Exception unit tests PASSED.
+Caught: Error: Capacity must be greater than 0
+Caught: Error: Capacity must be greater than current size.
+invalidCapacity unit tests PASSED
 
 Unit tests PASSED
