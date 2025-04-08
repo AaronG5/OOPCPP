@@ -1,8 +1,8 @@
 Running class HashTable unit tests...
 
-Find unit tests passed.
-Copy unit tests passed.
-Size unit tests passed.
+Find unit tests PASSED.
+Copy unit tests PASSED.
+Size unit tests PASSED.
 
 Rehash unit test output:
 2.  Anna 66
@@ -24,14 +24,13 @@ Rehash unit test output:
 14.  Ron 55  Adam 22
 15.  Tom 44
 16.  Jim 44  Leo 55  Eve 66  Sal 77
-
-Rehash unit tests passed.
-Compare unit tests passed.
-Remove unit tests passed.
-Clear unit tests passed.
+Rehash unit tests PASSED.
+Compare unit tests PASSED.
+Remove unit tests PASSED.
+Clear unit tests PASSED.
 Testing custom exception...
 Caught: Error: Couldn't find key
 Caught: Error: Couldn't find key
-Exception unit tests passed.
+Exception unit tests PASSED.
 
-Unit tests passed!
+Unit tests PASSED
