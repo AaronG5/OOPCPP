@@ -3,3 +3,4 @@
 ChessPiece.cpp
 *.o
 *.dSYM
+realizacijaReal.cpp

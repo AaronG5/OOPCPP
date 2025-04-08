@@ -9,8 +9,8 @@ TEST_LOG = log.txt
 demo.o: demo.cpp realizacija.h
 	$(CC) $(CFLAGS) demo.cpp -o demo.o
 
-realizacija.o: realizacija.cpp realizacija.h
-	$(CC) $(CFLAGS) realizacija.cpp -o realizacija.o
+realizacija.o: realizacijaBroken.cpp realizacija.h
+	$(CC) $(CFLAGS) realizacijaBroken.cpp -o realizacija.o
 
 test.o: test.cpp realizacija.h
 	$(CC) $(CFLAGS) test.cpp -o test.o

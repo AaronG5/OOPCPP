@@ -98,13 +98,12 @@ void HashTable::remove(const std::string& key) {
       [&](const std::pair<std::string, int>& par) { return par.first == key; });
    if(it != pImpl->table[index].end()) {
       pImpl->table[index].erase(it);
-      --(pImpl->size);
    }
    else throw KeyNotFoundException();
 }
 
 void HashTable::rehash(const int& newCapacity) { 
-   if(newCapacity <= 0) throw std::invalid_argument("Error: Capacity must be greater than 0");
+   if(newCapacity < pImpl->size) throw std::invalid_argument("Error: Capacity must be greater than current size.");
    pImpl->setCapacity(newCapacity);
    std::vector <std::list <std::pair <std::string, int> > > oldTable(pImpl->table);
 
@@ -175,7 +174,7 @@ std::string HashTable::toString() const {
          if(!(eachBucket.empty())) {
             tableInfo += std::to_string(index) + ".";
             for(std::list<std::pair<std::string, int>>::iterator it = eachBucket.begin(); it != eachBucket.end(); ++it) {
-               tableInfo += "  " + it->first + " " + std::to_string(it->second);
+               tableInfo += " " + it->first + " " + std::to_string(it->second);
             }
             tableInfo += "\n";
          }
