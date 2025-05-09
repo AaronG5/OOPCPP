@@ -2,6 +2,7 @@
 #define SONG_H
 
 #include <string>
+#include <sstream>
 
 class Song {
    private:
@@ -19,6 +20,7 @@ class Song {
    std::string getTitle() const;
    std::string getArtist() const;
    int getLength() const;
+   std::string getSongInfo() const;
 };
 
 #endif

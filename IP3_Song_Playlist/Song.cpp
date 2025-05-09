@@ -16,3 +16,8 @@ int Song::getUniqueId() const { return uniqueId; }
 std::string Song::getTitle() const { return title; }
 std::string Song::getArtist() const { return artist; }
 int Song::getLength() const { return length; }
+std::string Song::getSongInfo() const { 
+   std::stringstream ss;
+   ss << "Title: " << title << ". Artist: " << artist << ". Track length: " << length << ".";
+   return ss.str();
+}
