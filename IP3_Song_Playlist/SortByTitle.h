@@ -3,9 +3,9 @@
 
 #include "SortingMethod.h"
 
-class SortByTitle : public SortingMethod {
+class SortByTitle : public SortingMethod { // Using Gnome Sort (a.k.a. Stupid Sort)
    public:
-   std::vector<std::shared_ptr<Song>> sortPlaylist(SongPlaylist playlist);
+   void sortPlaylist(std::vector<std::shared_ptr<Song>>& playlist);
 };
 
 #endif
