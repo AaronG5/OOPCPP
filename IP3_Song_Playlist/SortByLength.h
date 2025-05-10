@@ -4,8 +4,12 @@
 #include "SortingMethod.h"
 
 class SortByLength : public SortingMethod {
+   private:
+   class Algorithm;
+   std::unique_ptr<Algorithm> pImpl;
+
    public:
-   std::vector<std::shared_ptr<Song>> sortPlaylist(SongPlaylist playlist);
+   void sortPlaylist(std::vector<std::shared_ptr<Song>>& playlist);
 };
 
 #endif
