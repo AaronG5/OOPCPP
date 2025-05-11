@@ -7,6 +7,7 @@
 class SortingMethod {
    public:
    virtual void sortPlaylist(std::vector<std::shared_ptr<Song>>& playlist);
+   virtual ~SortingMethod() = default;
 };
 
 #endif
