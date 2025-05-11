@@ -1,4 +1,4 @@
-#include "SortByLength.h"
+#include "SortingMethod.h"
 
 class SortByLength::Algorithm {
    private:

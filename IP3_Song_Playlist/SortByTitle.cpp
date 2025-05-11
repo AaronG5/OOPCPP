@@ -1,4 +1,4 @@
-#include "SortByLength.h"
+#include "SortingMethod.h"
 
 void SortByTitle::sortPlaylist(std::vector<std::shared_ptr<Song>>& playlist) {
    int index = 0;
