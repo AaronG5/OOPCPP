@@ -1,15 +1,32 @@
 #ifndef SONG_PLAYLIST_H
 #define SONG_PLAYLIST_H
 
-#include "Song.h"
 #include "SortingMethod.h"
-#include "SortByLength.h"
-#include "SortByTitle.h"
 #include <vector>
+#include <sstream>
 
 #define SORT_BY_LENGTH 0
 #define SORT_BY_TITLE 1
 #define SORT_BY_ARTIST 2
+
+class Song {
+   private:
+   static int nextId;
+   int uniqueId;
+   std::string title;
+   std::string artist;
+   int length; // Seconds
+
+   public:
+   Song(const std::string& title, const std::string& artist, const int& length);
+
+   int getUniqueId() const;
+   std::string getTitle() const;
+   std::string getArtist() const;
+   int getLength() const;
+   std::string getSongInfo() const;
+};
+
 
 class SongPlaylist {
    private: 
@@ -19,9 +36,9 @@ class SongPlaylist {
    public:
    SongPlaylist();
 
-   void addSong(const std::string& title, const std::string& artist, const int& length); // Add song to playlist and automatically sort by sorting method
+   void addSong(const std::string& title, const std::string& artist, const int& length); // Create song and add to playlist, automatically sort by sorting method
 
-   void addSong(std::shared_ptr<Song> song);
+   void addSong(std::shared_ptr<Song> song); // Pass song and add to playlist, automatically sort by sorting method
 
    void removeSong(const std::string& title); // Remove song from playlist by title
 
@@ -31,10 +48,11 @@ class SongPlaylist {
 
    void setSortMethod(const int& which);
 
+   std::shared_ptr<Song> operator[] (const std::string& title) const; // Same as getSong
+
    std::shared_ptr<Song> getSong(const std::string& title) const;
    std::vector<std::shared_ptr<Song>> getPlaylist() const;
    std::string getPlaylistInfo() const; // return information for every Song from playlist in order
-
 };
 
 #endif

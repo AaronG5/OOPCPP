@@ -50,6 +50,10 @@ void SongPlaylist::setSortMethod(const int& which) {
    }
 }
 
+std::shared_ptr<Song> SongPlaylist::operator[] (const std::string& title) const {
+   return getSong(title);
+}
+
 std::shared_ptr<Song> SongPlaylist::getSong(const std::string& title) const {
    for(auto it = playlist.begin(); it < playlist.end(); ++it) {
       if((*it)->getTitle() == title) { return *it; }
