@@ -1,6 +1,6 @@
 #include "SortByLength.h"
 
-void sortPlaylist(std::vector<std::shared_ptr<Song>>& playlist) {
+void SortByTitle::sortPlaylist(std::vector<std::shared_ptr<Song>>& playlist) {
    int index = 0;
    int size = playlist.size();
 
