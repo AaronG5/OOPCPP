@@ -14,3 +14,7 @@ void SortByTitle::sortPlaylist(std::vector<std::shared_ptr<Song>>& playlist) {
       }
    }
 }
+
+std::unique_ptr<SortingMethod> SortByTitle::clone() const {
+   return std::make_unique<SortByTitle>();
+}

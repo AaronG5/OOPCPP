@@ -1,6 +1,6 @@
 #include "SortingMethod.h"
 
-class SortByLength::Algorithm {
+class SortByLength::Impl {
    private:
    struct TreeNode {
       std::shared_ptr<Song> song;
@@ -32,8 +32,12 @@ class SortByLength::Algorithm {
    friend SortByLength;
 };
 
+SortByLength::SortByLength() : pImpl(std::make_unique<Impl>()) {}
+
+SortByLength::~SortByLength() = default;
+
 void SortByLength::sortPlaylist(std::vector<std::shared_ptr<Song>>& playlist) {
-   SortByLength::Algorithm::TreeNode *root = new SortByLength::Algorithm::TreeNode(playlist.front());
+   SortByLength::Impl::TreeNode *root = new SortByLength::Impl::TreeNode(playlist.front());
    for(auto it = ++playlist.begin(); it < playlist.end(); ++it) {
       pImpl->insert(root, *it);
    }
@@ -42,4 +46,8 @@ void SortByLength::sortPlaylist(std::vector<std::shared_ptr<Song>>& playlist) {
    pImpl->destroyTree(root);
 
    playlist = sortedPlaylist;
+}
+
+std::unique_ptr<SortingMethod> SortByLength::clone() const {
+   return std::make_unique<SortByLength>();
 }
