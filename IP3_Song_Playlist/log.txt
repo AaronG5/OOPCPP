@@ -1,0 +1,15 @@
+Get method and comparison tests passed.
+Exception test start.
+
+Song not found: Tomorrow
+Song not found: November
+Song not found: Sireneh
+Song points to null
+Index value out of range
+Value out of range
+
+Exception tests passed.
+Multiple playlist test passed.
+Sort by length test passed
+Sort by title test passed
+All tests passed!
