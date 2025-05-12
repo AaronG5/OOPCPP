@@ -19,3 +19,14 @@ std::string Song::getSongInfo() const {
    ss << "Title: " << title << ". Artist: " << artist << ". Track length: " << length / 60 << "min. " << length % 60 << "s.";
    return ss.str();
 }
+
+bool Song::operator== (const std::shared_ptr<Song>& other) const {
+   if(
+      this->uniqueId == other->uniqueId ||
+      (this->title == other->title &&
+      this->artist == other->artist &&
+      this->length == other->length)
+      ) 
+   {  return true; }
+   else { return false; }
+}
