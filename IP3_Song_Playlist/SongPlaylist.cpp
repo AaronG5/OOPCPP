@@ -5,17 +5,6 @@ SongPlaylist::SongPlaylist(const SongPlaylist& other) {
    this->sorter = other.sorter ? other.sorter->clone() : nullptr;
 }
 
-void SongPlaylist::addSong(const std::string& title, const std::string& artist, const int& s) {
-   playlist.push_back(std::make_shared<Song>(title, artist, s));
-   if(sorter != nullptr) {
-      sortPlaylist();
-   }
-}
-
-void SongPlaylist::addSong(const std::string& title, const std::string& artist, const int& min, const int& s) {
-   addSong(title, artist, min * 60 + s);
-}
-
 void SongPlaylist::addSong(std::shared_ptr<Song> song) {
    if(song == nullptr) {
       throw std::invalid_argument("Song points to null");
@@ -40,20 +29,8 @@ void SongPlaylist::addSongToOtherPlaylist(const std::string& title, SongPlaylist
    other.addSong(this->getSong(title));
 }
 
-void SongPlaylist::setSortMethod(const int& which) {
-   switch(which) {
-      case SORT_BY_LENGTH:
-      sorter = std::make_unique<SortByLength>();
-      break;
-      case SORT_BY_TITLE:
-      sorter = std::make_unique<SortByTitle>();
-      break;
-      case SORT_BY_ARTIST:
-      // 3rd sorting method should go here
-      break;
-      default:
-      throw std::out_of_range("Value out of range");
-   }
+void SongPlaylist::setSortMethod(std::unique_ptr<SortingMethod> method) {
+   sorter = std::move(method);
 }
 
 void SongPlaylist::sortPlaylist() {

@@ -48,16 +48,13 @@ class SongPlaylist {
    SongPlaylist() = default;
    SongPlaylist(const SongPlaylist& other);
 
-   void addSong(const std::string& title, const std::string& artist, const int& s); // Create song, add to playlist and sort
-   void addSong(const std::string& title, const std::string& artist, const int& min, const int& s); // Pass minutes and seconds as separate arguments
-
    void addSong(std::shared_ptr<Song> song); // Pass song and add to playlist and sort
 
    void removeSong(const std::string& title);
 
    void addSongToOtherPlaylist(const std::string& title, SongPlaylist& other);
 
-   void setSortMethod(const int& which);
+   void setSortMethod(std::unique_ptr<SortingMethod> method);
 
    void sortPlaylist();
 
