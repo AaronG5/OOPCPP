@@ -14,6 +14,7 @@ class Song {
 
    public:
    Song(const std::string& title, const std::string& artist, const int& length);
+   Song(const std::string& title, const std::string& artist, const int& min, const int& s);
 
    int getUniqueId() const;
    std::string getTitle() const;

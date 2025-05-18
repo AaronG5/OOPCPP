@@ -10,6 +10,9 @@ Song::Song(const std::string& title, const std::string& artist, const int& lengt
    uniqueId = nextId++;
 }
 
+Song::Song(const std::string& title, const std::string& artist, const int& min, const int& s) :
+   Song(title, artist, min * 60 + s) {}
+
 int Song::getUniqueId() const { return uniqueId; }
 std::string Song::getTitle() const { return title; }
 std::string Song::getArtist() const { return artist; }
