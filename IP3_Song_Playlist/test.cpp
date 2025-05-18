@@ -9,13 +9,12 @@
 using namespace std;
 
 void addSongs(SongPlaylist *&playlist) {
-      playlist->addSong("Holding The Moth", "Underworld", 5, 29);
-      playlist->addSong("Pripjaty Pandemonium", "BANDEE", 6, 31);
-      playlist->addSong("XXX", "6EJOU", 6, 37);
-      playlist->addSong("Beautiful Burnout", "Underworld", 8, 9);
-      playlist->addSong("The Orange Theme - Original Version", "Cygnus X", 6, 31);
-      shared_ptr<Song> song = make_shared<Song>("AC130", "Luciid", 356);
-      playlist->addSong(song);
+      playlist->addSong(make_shared<Song>("Holding The Moth", "Underworld", 5, 29));
+      playlist->addSong(make_shared<Song>("Pripjaty Pandemonium", "BANDEE", 6, 31));
+      playlist->addSong(make_shared<Song>("XXX", "6EJOU", 6, 37));
+      playlist->addSong(make_shared<Song>("Beautiful Burnout", "Underworld", 8, 9));
+      playlist->addSong(make_shared<Song>("The Orange Theme - Original Version", "Cygnus X", 6, 31));
+      playlist->addSong(make_shared<Song>("AC130", "Luciid", 356));
 }
 
 void getAndCompareTest() {
@@ -49,7 +48,7 @@ void exceptionTest() {
    SongPlaylist *playlist = new SongPlaylist();
    int exceptionCounter = 0;
    
-   playlist->addSong("Tomorrow", "Tyler, The Creator", 3, 2);
+   playlist->addSong(make_shared<Song>("Tomorrow", "Tyler, The Creator", 3, 2));
    assert(playlist->getSong("Tomorrow"));
    
    playlist->removeSong("Tomorrow");
@@ -84,22 +83,16 @@ void exceptionTest() {
       ++exceptionCounter;
    }
 
-   try { playlist->setSortMethod(3); }
-   catch(out_of_range &e) {
-      cout << e.what() << endl; 
-      ++exceptionCounter;
-   }
-
    delete playlist;
-   if(exceptionCounter == 6) { cout << "\nException tests passed." << endl; }
+   if(exceptionCounter == 5) { cout << "\nException tests passed." << endl; }
 }
 
 void multiplePlaylistTest() {
    SongPlaylist *playlist1 = new SongPlaylist();
    SongPlaylist *playlist2 = new SongPlaylist();
    try {
-      playlist1->addSong("XXX", "6EJOU", 6, 37);
-      playlist1->addSong("Obscured by Clouds", "Pink Floyd", 3, 4);
+      playlist1->addSong(make_shared<Song>("XXX", "6EJOU", 6, 37));
+      playlist1->addSong(make_shared<Song>("Obscured by Clouds", "Pink Floyd", 3, 4));
 
       playlist1->addSongToOtherPlaylist("XXX", *playlist2);
       assert(playlist1->getSong("XXX") == playlist2->getSong("XXX"));
@@ -120,7 +113,7 @@ void sortByLengthTest() {
       addSongs(playlist1);
       SongPlaylist *playlist2 = new SongPlaylist(*playlist1);
 
-      playlist1->setSortMethod(SORT_BY_LENGTH);
+      playlist1->setSortMethod(make_unique<SortByLength>());
       playlist1->sortPlaylist();
 
       assert(!(playlist1->getPlaylist() == playlist2->getPlaylist()));
@@ -137,7 +130,7 @@ void sortByLengthTest() {
       assert((*playlist1)[4]->getTitle() == "XXX");
       assert((*playlist1)[5]->getTitle() == "Beautiful Burnout");
 
-      playlist1->addSong("Gummo Hardrive", "Liquid Earth", 6, 33);
+      playlist1->addSong(make_shared<Song>("Gummo Hardrive", "Liquid Earth", 6, 33));
       assert((*playlist1)[4]->getTitle() == "Gummo Hardrive");
       assert((*playlist1)[5]->getTitle() == "XXX");
       assert((*playlist1)[6]->getTitle() == "Beautiful Burnout");
@@ -153,7 +146,7 @@ void sortByTitleTest() {
       addSongs(playlist1);
       SongPlaylist *playlist2 = new SongPlaylist(*playlist1);
 
-      playlist1->setSortMethod(SORT_BY_TITLE);
+      playlist1->setSortMethod(make_unique<SortByTitle>());
       playlist1->sortPlaylist();
 
       assert(!(playlist1->getPlaylist() == playlist2->getPlaylist()));
@@ -164,7 +157,7 @@ void sortByTitleTest() {
       assert((*playlist1)[4]->getTitle() == "The Orange Theme - Original Version");
       assert((*playlist1)[5]->getTitle() == "XXX");
 
-      playlist1->addSong("Gummo Hardrive", "Liquid Earth", 6, 33);
+      playlist1->addSong(make_shared<Song>("Gummo Hardrive", "Liquid Earth", 6, 33));
       assert((*playlist1)[1]->getTitle() == "Beautiful Burnout");
       assert((*playlist1)[2]->getTitle() == "Gummo Hardrive");
       assert((*playlist1)[3]->getTitle() == "Holding The Moth");
@@ -180,7 +173,7 @@ void sortByArtistTest() {
       addSongs(playlist1);
       SongPlaylist *playlist2 = new SongPlaylist(*playlist1);
 
-      playlist1->setSortMethod(SORT_BY_ARTIST);
+      playlist1->setSortMethod(make_unique<SortByArtist>());
       playlist1->sortPlaylist();
 
       assert(!(playlist1->getPlaylist() == playlist2->getPlaylist()));
@@ -197,7 +190,7 @@ void sortByArtistTest() {
          ((*playlist1)[5]->getTitle() == "Holding The Moth")
       );
 
-      playlist1->addSong("Gummo Hardrive", "Liquid Earth", 6, 33);
+      playlist1->addSong(make_shared<Song>("Gummo Hardrive", "Liquid Earth", 6, 33));
       assert((*playlist1)[2]->getTitle() == "The Orange Theme - Original Version");
       assert((*playlist1)[3]->getTitle() == "Gummo Hardrive");
       assert((*playlist1)[4]->getTitle() == "AC130");
