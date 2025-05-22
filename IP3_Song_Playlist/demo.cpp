@@ -2,7 +2,8 @@
 
 #include "Song.h" 
 #include "SongPlaylist.h"
-#include "SortingMethod.h"
+#include "SortingAlgorithm.h"
+#include "CompareStrategy.h"
 #include <iostream>
 
 using namespace std;
@@ -35,12 +36,12 @@ int main() {
       cout << "\nUser adds a couple more songs to his playlist and wants to sort it by the length of the songs.\n" << endl;
       jazz->addSong(make_shared<Song>("When Sunny Gets Blue", "McCoy Tyner", 4, 42));
       jazz->addSong(make_shared<Song>("It Never Entered My Mind", "Miles Davis", 4, 3));
-      jazz->setSortMethod(make_unique<SortByLength>()); // POLYMORPHISM
+      jazz->setSortMethod(make_unique<TreeSort>(), make_unique<CompareByLength>()); // POLYMORPHISM
       jazz->sortPlaylist(); // POLYMORPHISM
       jazz->getPlaylistInfo();
    
       cout << "User thinks that the playlist would be nicer if it were sorted by song title.\n" << endl;
-      jazz->setSortMethod(make_unique<SortByTitle>()); // POLYMORPHISM
+      jazz->setSortMethod(make_unique<GnomeSort>(), make_unique<CompareByTitle>()); // POLYMORPHISM
       jazz->sortPlaylist(); // POLYMORPHISM
       jazz->getPlaylistInfo();
    
