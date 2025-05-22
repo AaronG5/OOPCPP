@@ -1,8 +1,9 @@
-// Required derived class to implement: SortByArtist
-// It is required to implement some kind of custom sorting algorithm instead of just using std::sort().
+// Required derived class to implement: CompareByArtist + custom sorting algorithm
+// It is recommended to implement some kind of custom sorting algorithm instead of just using std::sort().
 
 #include "SongPlaylist.h"
-#include "SortingMethod.h"
+#include "SortingAlgorithm.h"
+#include "CompareStrategy.h"
 #include <cassert>
 #include <iostream>
 
@@ -113,7 +114,7 @@ void sortByLengthTest() {
       addSongs(playlist1);
       SongPlaylist *playlist2 = new SongPlaylist(*playlist1);
 
-      playlist1->setSortMethod(make_unique<SortByLength>());
+      playlist1->setSortMethod(make_unique<TreeSort>(), make_unique<CompareByLength>());
       playlist1->sortPlaylist();
 
       assert(!(playlist1->getPlaylist() == playlist2->getPlaylist()));
@@ -146,7 +147,7 @@ void sortByTitleTest() {
       addSongs(playlist1);
       SongPlaylist *playlist2 = new SongPlaylist(*playlist1);
 
-      playlist1->setSortMethod(make_unique<SortByTitle>());
+      playlist1->setSortMethod(make_unique<GnomeSort>(), make_unique<CompareByTitle>());
       playlist1->sortPlaylist();
 
       assert(!(playlist1->getPlaylist() == playlist2->getPlaylist()));
@@ -173,7 +174,7 @@ void sortByArtistTest() {
       addSongs(playlist1);
       SongPlaylist *playlist2 = new SongPlaylist(*playlist1);
 
-      playlist1->setSortMethod(make_unique<SortByArtist>());
+      //playlist1->setSortMethod(make_unique<TreeSort>(), make_unique<CompareByArtist>());
       playlist1->sortPlaylist();
 
       assert(!(playlist1->getPlaylist() == playlist2->getPlaylist()));
