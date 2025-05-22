@@ -5,5 +5,5 @@ bool CompareByLength::compare(std::shared_ptr<Song> song1, std::shared_ptr<Song>
 }
 
 std::unique_ptr<CompareStrategy> CompareByLength::clone() const {
-   return std::make_unique<CompareStrategy>();
+   return std::make_unique<CompareByTitle>();
 }
