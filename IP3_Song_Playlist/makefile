@@ -1,8 +1,9 @@
 CC = g++
 CFLAGS = -std=c++17 -Wall -Wextra -c -Wno-self-assign-overloaded -Wno-unused-variable
 
-SORT = SortByLength.o SortByTitle.o #SortByArtist.o
-HEADER = Song.h SongPlaylist.h SortingMethod.h
+COMPARE = CompareByLength.o CompareByTitle.o #CompareByArtist.o
+SORT = TreeSort.o GnomeSort.o
+HEADER = Song.h SongPlaylist.h SortingAlgorithm.h CompareStrategy.h
 
 TEST = Test
 DEMO = Demo
@@ -15,14 +16,20 @@ demo.o: demo.cpp $(HEADER)
 test.o: test.cpp $(HEADER)
 	$(CC) $(CFLAGS) test.cpp -o test.o
 
-SortByLength.o: SortByLength.cpp $(HEADER)
-	$(CC) $(CFLAGS) SortByLength.cpp -o SortByLength.o
+CompareByLength.o: CompareByLength.cpp $(HEADER)
+	$(CC) $(CFLAGS) CompareByLength.cpp -o CompareByLength.o
 
-SortByTitle.o: SortByTitle.cpp $(HEADER)
-	$(CC) $(CFLAGS) SortByTitle.cpp -o SortByTitle.o
+CompareByTitle.o: CompareByTitle.cpp $(HEADER)
+	$(CC) $(CFLAGS) CompareByTitle.cpp -o CompareByTitle.o
 
-#SortByArtist.o: SortByArtist.cpp $(HEADER)
-#	$(CC) $(CFLAGS) SortByArtist.cpp -o SortByArtist.o
+#CompareByArtist.o: CompareByArtist.cpp $(HEADER)
+#	$(CC) $(CFLAGS) CompareByArtist.cpp -o CompareByArtist.o
+
+TreeSort.o: TreeSort.cpp $(HEADER)
+	$(CC) $(CFLAGS) TreeSort.cpp -o TreeSort.o
+
+GnomeSort.o: GnomeSort.cpp $(HEADER)
+	$(CC) $(CFLAGS) GnomeSort.cpp -o GnomeSort.o
 
 Song.o: Song.cpp Song.h
 	$(CC) $(CFLAGS) Song.cpp -o Song.o
@@ -30,11 +37,11 @@ Song.o: Song.cpp Song.h
 SongPlaylist.o: SongPlaylist.cpp Song.h SongPlaylist.h
 	$(CC) $(CFLAGS) SongPlaylist.cpp -o SongPlaylist.o
 
-demo: demo.o $(SORT) Song.o SongPlaylist.o
-	$(CC) $(SORT) Song.o SongPlaylist.o demo.o -o $(DEMO)
+demo: demo.o $(COMPARE) $(SORT) Song.o SongPlaylist.o
+	$(CC) $(COMPARE) $(SORT) Song.o SongPlaylist.o demo.o -o $(DEMO)
 
-test: test.o $(SORT) Song.o SongPlaylist.o
-	$(CC) $(SORT) Song.o SongPlaylist.o test.o -o $(TEST)
+test: test.o $(COMPARE) $(SORT) Song.o SongPlaylist.o
+	$(CC) $(COMPARE) $(SORT) Song.o SongPlaylist.o test.o -o $(TEST)
 
 run_demo: demo
 	./$(DEMO)
