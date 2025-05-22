@@ -6,7 +6,6 @@ Song not found: November
 Song not found: Sireneh
 Song points to null
 Index value out of range
-Value out of range
 
 Exception tests passed.
 Multiple playlist test passed.
