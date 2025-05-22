@@ -5,10 +5,13 @@
 // Structure of project:
 // # SongPlaylist - represents a playlist used for storing 'Song' objects inside of its vector.
 // # Song - represents a song that can be stored in 'SongPlaylist' instances.
-// # SortingMethod - fully virtual class used as a base class for different methods of sorting the playlist.
-// # SortByLength - method of sorting the playlist by song length using Tree Sort. Derived from 'SortingMethod'.
-// # SortByTitle - method of sorting the playlist by song title using Gnome Sort. Derived from 'SortingMethod'.
-// # SortByArtist - method of sorting the playlist by song artist. Derived from 'SortingMethod'. To be implemented by colleagues.
+// # CompareStrategy - fully virtual class used as a base class for deriving different ways of comparing songs to one another.
+// # CompareByLength - method of comparing songs by their length. Derived from 'CompareStrategy'.
+// # CompareByTitle - method of comparing songs by their title. Derived from 'CompareStrategy'.
+// # CompareByArtist - method of comparing songs by their artist. Derived from 'CompareStrategy'. To be implemented by colleagues.
+// # SortingAlgorithm - fully virtual class used as a base class for different sorting algorithms to sort the playlist.
+// # TreeSort - a sorting algorithm based on binary search tree (BST). Derived from 'SortingAlgorithm`.
+// # GnomeSort - a secondary sorting algorithm. Derived from 'SortingAlgorithm`.
 
 // Methods included in 'SongPlaylist':
 // # Deep copy constructor
@@ -27,11 +30,11 @@
 // It would be easy to resolve this issue by accessing Song objects by their unique ID instead, but 
 // for easier and more readable testing, Song objects are accessed by their titles.
 
-#ifndef SONG_PLAYLIST_H
-#define SONG_PLAYLIST_H
+#pragma once
 
 #include "Song.h"
-#include "SortingMethod.h"
+#include "SortingAlgorithm.h"
+#include "CompareStrategy.h"
 #include <vector>
 #include <stdexcept>
 
@@ -42,7 +45,8 @@
 class SongPlaylist {
    private: 
    std::vector<std::shared_ptr<Song>> playlist;
-   std::unique_ptr<SortingMethod> sorter;
+   std::unique_ptr<SortingAlgorithm> sorter;
+   std::unique_ptr<CompareStrategy> comparator;
 
    public:
    SongPlaylist() = default;
@@ -54,7 +58,7 @@ class SongPlaylist {
 
    void addSongToOtherPlaylist(const std::string& title, SongPlaylist& other);
 
-   void setSortMethod(std::unique_ptr<SortingMethod> method);
+   void setSortMethod(std::unique_ptr<SortingAlgorithm> sortAlgorithm, std::unique_ptr<CompareStrategy> compareStrat);
 
    void sortPlaylist();
 
@@ -65,5 +69,3 @@ class SongPlaylist {
    std::vector<std::shared_ptr<Song>> getPlaylist() const;
    std::string getPlaylistInfo() const; 
 };
-
-#endif

@@ -3,6 +3,7 @@
 SongPlaylist::SongPlaylist(const SongPlaylist& other) {
    this->playlist = other.playlist;
    this->sorter = other.sorter ? other.sorter->clone() : nullptr;
+   this->comparator = other.comparator ? other.comparator->clone() : nullptr;
 }
 
 void SongPlaylist::addSong(std::shared_ptr<Song> song) {
@@ -29,12 +30,13 @@ void SongPlaylist::addSongToOtherPlaylist(const std::string& title, SongPlaylist
    other.addSong(this->getSong(title));
 }
 
-void SongPlaylist::setSortMethod(std::unique_ptr<SortingMethod> method) {
-   sorter = std::move(method);
+void SongPlaylist::setSortMethod(std::unique_ptr<SortingAlgorithm> sortAlgorithm, std::unique_ptr<CompareStrategy> compareStrat) {
+   sorter = std::move(sortAlgorithm);
+   comparator = std::move(compareStrat);
 }
 
 void SongPlaylist::sortPlaylist() {
-   if(sorter) { sorter->sortPlaylist(playlist); }
+   if(sorter && comparator) { sorter->sortPlaylist(playlist, comparator); }
 }
 
 std::shared_ptr<Song> SongPlaylist::operator[] (const int& index) const {
