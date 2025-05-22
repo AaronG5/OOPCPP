@@ -1,5 +1,4 @@
-#ifndef SONG_H
-#define SONG_H
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -24,5 +23,3 @@ class Song {
 
    bool operator== (const std::shared_ptr<Song>& other) const;
 };
-
-#endif
