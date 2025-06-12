@@ -174,7 +174,7 @@ void sortByArtistTest() {
       addSongs(playlist1);
       SongPlaylist *playlist2 = new SongPlaylist(*playlist1);
 
-      //playlist1->setSortMethod(make_unique<TreeSort>(), make_unique<CompareByArtist>());
+      playlist1->setSortMethod(make_unique<TreeSort>(), make_unique<CompareByArtist>());
       playlist1->sortPlaylist();
 
       assert(!(playlist1->getPlaylist() == playlist2->getPlaylist()));
@@ -207,7 +207,7 @@ int main() {
    multiplePlaylistTest();
    sortByLengthTest();
    sortByTitleTest();
-   // sortByArtistTest();
+   sortByArtistTest();
    cout << "All tests passed!" << endl;
    
    return 0;
