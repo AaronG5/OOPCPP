@@ -1,9 +1,9 @@
 CC = g++
 CFLAGS = -std=c++17 -Wall -Wextra -c -Wno-self-assign-overloaded -Wno-unused-variable
 
-COMPARE = CompareByLength.o CompareByTitle.o #CompareByArtist.o
+COMPARE = CompareByLength.o CompareByTitle.o CompareByArtist.o
 SORT = TreeSort.o GnomeSort.o
-HEADER = Song.h SongPlaylist.h SortingAlgorithm.h CompareStrategy.h
+HEADER = Song.h SongPlaylist.h SortingAlgorithm.h CompareStrategy.h CompareByArtist.h
 
 TEST = Test
 DEMO = Demo
@@ -22,8 +22,8 @@ CompareByLength.o: CompareByLength.cpp $(HEADER)
 CompareByTitle.o: CompareByTitle.cpp $(HEADER)
 	$(CC) $(CFLAGS) CompareByTitle.cpp -o CompareByTitle.o
 
-#CompareByArtist.o: CompareByArtist.cpp $(HEADER)
-#	$(CC) $(CFLAGS) CompareByArtist.cpp -o CompareByArtist.o
+CompareByArtist.o: CompareByArtist.cpp $(HEADER)
+	$(CC) $(CFLAGS) CompareByArtist.cpp -o CompareByArtist.o
 
 TreeSort.o: TreeSort.cpp $(HEADER)
 	$(CC) $(CFLAGS) TreeSort.cpp -o TreeSort.o

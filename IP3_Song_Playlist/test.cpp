@@ -3,6 +3,7 @@
 #include "SongPlaylist.h"
 #include "SortingAlgorithm.h"
 #include "CompareStrategy.h"
+#include "CompareByArtist.h"
 #include <cassert>
 #include <iostream>
 
