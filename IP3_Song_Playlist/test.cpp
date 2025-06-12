@@ -1,4 +1,6 @@
-// Required derived class to implement: CompareByArtist
+// Required class to implement: CompareByArtist, which would be derived from CompareStrategy class.
+// This class requires to have 2 methods: compare() and clone()
+// Implement this class inside of a separate header and class file named: CompareByArtist.h/cpp
 
 #include "SongPlaylist.h"
 #include "SortingAlgorithm.h"
