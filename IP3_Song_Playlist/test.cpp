@@ -1,5 +1,4 @@
-// Required derived class to implement: CompareByArtist + custom sorting algorithm
-// It is recommended to implement some kind of custom sorting algorithm instead of just using std::sort().
+// Required derived class to implement: CompareByArtist
 
 #include "SongPlaylist.h"
 #include "SortingAlgorithm.h"
